@@ -31,8 +31,8 @@ class DJBase {
 
     private static $dsn = "";
     private static $options = array(
-      "mysql_user" => null,
-      "mysql_pass" => null,
+      "user" => null,
+      "pass" => null,
     );
 
     // use either `configure` or `setConnection`, depending on if
@@ -53,12 +53,12 @@ class DJBase {
     protected static function getConnection() {
         if (self::$db === null) {
             if (!self::$dsn) {
-                throw new DJException("Please tell DJJob how to connect to your database by calling DJJob::configure(\$dsn, [\$options = array()]) or re-using an existing PDO connection by calling DJJob::setConnection(\$pdoObject). If you're using MySQL you'll need to pass the db credentials as separate 'mysql_user' and 'mysql_pass' options. This is a PDO limitation, see [http://stackoverflow.com/questions/237367/why-is-php-pdo-dsn-a-different-format-for-mysql-versus-postgresql] for an explanation.");
+                throw new DJException("Please tell DJJob how to connect to your database by calling DJJob::configure(\$dsn, [\$options = array()]) or re-using an existing PDO connection by calling DJJob::setConnection(\$pdoObject). If you're using MySQL you'll need to pass the db credentials as separate 'user' and 'pass' options. This is a PDO limitation, see [http://stackoverflow.com/questions/237367/why-is-php-pdo-dsn-a-different-format-for-mysql-versus-postgresql] for an explanation.");
             }
             try {
                 // http://stackoverflow.com/questions/237367/why-is-php-pdo-dsn-a-different-format-for-mysql-versus-postgresql
-                if (self::$options["mysql_user"] !== null) {
-                    self::$db = new PDO(self::$dsn, self::$options["mysql_user"], self::$options["mysql_pass"]);
+                if (self::$options["user"] !== null) {
+                    self::$db = new PDO(self::$dsn, self::$options["user"], self::$options["pass"]);
                 } else {
                     self::$db = new PDO(self::$dsn);
                 }
@@ -384,7 +384,7 @@ class DJJob extends DJBase {
     public static function status($queue = "default") {
         $rs = self::runQuery("
             SELECT COUNT(*) as total, COUNT(failed_at) as failed, COUNT(locked_at) as locked
-            FROM `jobs`
+            FROM jobs
             WHERE queue = ?
         ", array($queue));
         $rs = $rs[0];

@@ -1,0 +1,12 @@
+CREATE TABLE jobs (
+id SERIAL PRIMARY KEY,
+handler TEXT NOT NULL,
+queue VARCHAR(255) NOT NULL DEFAULT 'default',
+attempts BIGINT NOT NULL DEFAULT 0,
+run_at TIMESTAMP NULL,
+locked_at TIMESTAMP NULL,
+locked_by VARCHAR(255) NULL,
+failed_at TIMESTAMP NULL,
+error TEXT NULL,
+created_at TIMESTAMP NOT NULL
+);

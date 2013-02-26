@@ -5,8 +5,8 @@ date_default_timezone_set('America/New_York');
 require dirname(__FILE__) . "/../DJJob.php";
 
 DJJob::configure("mysql:host=127.0.0.1;dbname=djjob", array(
-  "mysql_user" => "root",
-  "mysql_pass" => "",
+  "user" => "root",
+  "pass" => "",
 ));
 
 DJJob::runQuery("
