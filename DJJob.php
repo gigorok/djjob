@@ -294,8 +294,8 @@ class DJJob extends DJBase {
         $this->runUpdate("
             UPDATE jobs
             SET attempts = attempts + 1,
-                failed_at = IF(attempts >= ?, NOW(), NULL),
-                error = IF(attempts >= ?, ?, NULL)
+                failed_at = CASE WHEN (attempts + 1 >= ?) THEN NOW() ELSE NULL END,
+                error = CASE WHEN (attempts + 1 >= ?) THEN ? ELSE NULL END
             WHERE id = ?",
             array(
                 $this->max_attempts,
@@ -315,7 +315,7 @@ class DJJob extends DJBase {
     public function retryLater($delay) {
         $this->runUpdate("
             UPDATE jobs
-            SET run_at = DATE_ADD(NOW(), INTERVAL ? SECOND),
+            SET run_at = CURRENT_TIMESTAMP + INTERVAL '?' SECOND,
                 attempts = attempts + 1
             WHERE id = ?",
             array(
